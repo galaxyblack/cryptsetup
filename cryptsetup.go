@@ -11,11 +11,11 @@ import (
 )
 
 var (
-	CRYPT_PLAIN = MetaType(C.CRYPT_PLAIN)
-	CRYPT_LUKS1 = MetaType(C.CRYPT_LUKS1)
+	CRYPT_PLAIN   = MetaType(C.CRYPT_PLAIN)
+	CRYPT_LUKS1   = MetaType(C.CRYPT_LUKS1)
 	CRYPT_LOOPAES = MetaType(C.CRYPT_LOOPAES)
-	CRYPT_VERITY = MetaType(C.CRYPT_VERITY)
-	CRYPT_TCRYPT = MetaType(C.CRYPT_TCRYPT)
+	CRYPT_VERITY  = MetaType(C.CRYPT_VERITY)
+	CRYPT_TCRYPT  = MetaType(C.CRYPT_TCRYPT)
 )
 
 type MetaType string
@@ -76,6 +76,19 @@ func (dev *CryptDevice) Dump() error {
 		return fmt.Errorf(`Got error while crypt_dump(): %v`, errCode)
 	}
 	return nil
+}
+
+const (
+	CRYPT_INVALID  = CryptStatus(int(C.CRYPT_INVALID))
+	CRYPT_INACTIVE = CryptStatus(int(C.CRYPT_INACTIVE))
+	CRYPT_ACTIVE   = CryptStatus(int(C.CRYPT_ACTIVE))
+	CRYPT_BUSY     = CryptStatus(int(C.CRYPT_BUSY))
+)
+
+type CryptStatus int
+
+func (dev *CryptDevice) GetStatus(deviceName string) CryptStatus {
+	return CryptStatus(int(C.crypt_status(dev.cpCryptDevice, C.CString(deviceName))))
 }
 
 func (dev *CryptDevice) GetVerifyInfo() (*CryptVerifyInfo, error) {

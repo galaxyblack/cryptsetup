@@ -23,6 +23,7 @@ func main() {
 	dev.SetLogCallbackToStdout()
 	err = dev.LoadMeta(cryptsetup.CRYPT_LUKS1)
 	checkError(err)
+	fmt.Println(dev.GetStatus("test"))
 	fmt.Println(dev.GetVerifyInfo())
 	fmt.Println(dev.Dump())
 	fmt.Println(dev.GetUUID())
